@@ -4,6 +4,8 @@
 from tkinter import *
 from tkinter import PhotoImage
 
+result = 0
+
 window = Tk()
 window.minsize(300,435)
 window.maxsize(300,435)
@@ -19,7 +21,7 @@ sym_color = '#F69906'
 # Defining click function
 def click(event):
     global expressionVal
-
+    global result
     # cget() method is used to get value from button 
     text = event.widget.cget('text')
 
@@ -33,15 +35,28 @@ def click(event):
             except:
                 expressionVal.set("Error")
 
+    elif text == "<<":
+        new_exp = expressionVal.get()
+        new_exp = new_exp[: -1]
+        expressionVal.set(new_exp)
+
     elif text == 'C':
+        result = 0  # Clear the result
         expressionVal.set('')
         expression.update()
-    # elif text == "%":
-    #     result = (result / 100)
-        # expressionVal.set(result)
+    elif text == "%":
+        result = int(expressionVal.get())
+        result = result/100
+        expressionVal.set(result)
     else:
+        if result != 0:
+            # Clear the result if it's not zero
+            result = 0
+            expressionVal.set('')
+            expression.update()
         expressionVal.set(expressionVal.get() + text)
         expression.update()
+
      
 
 # Creating variable for storing result of math expression
@@ -60,7 +75,7 @@ b1 = Button(myframe, text='C', font=('lucida', 25, 'bold'), width=3, bg=num_colo
 b1.grid(row=0, column=0)
 b1.bind('<Button-1>', click)
 
-b2 = Button(myframe, text='-/+', font=('lucida', 25, 'bold'), width=3, bg=num_color, fg='#fff')
+b2 = Button(myframe, text='<<', font=('lucida', 25, 'bold'), width=3, bg=num_color, fg='#fff')
 b2.grid(row=0, column=1)
 b2.bind('<Button-1>', click)
 
